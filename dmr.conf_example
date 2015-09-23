@@ -1,0 +1,8 @@
+[Webapi]
+url=http://veronamersfoort.nl/dmr/repeater_db.php
+
+[MQTT]
+host=localhost
+
+[Getter]
+sleeptime=2
