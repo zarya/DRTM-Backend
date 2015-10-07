@@ -73,7 +73,11 @@ class UGetter(Daemon):
 
                 if isinstance(data, (list, tuple)):
                     if re.match('[a-zA-Z0-9_]',line[2]):
-                        logging.debug("%s TS%s: %s (%s) at %s:%s %s-%s-%s on %s" % (line[3],int(line[6]),line[2],line[8][1:],line[0][10:12],line[0][8:10],line[0][6:8],line[0][4:6],line[0][0:4],line[7][2:]))
+                        try:
+                            logging.debug("%s TS%s: %s (%s) at %s:%s %s-%s-%s on %s" % (line[3],int(line[6]),line[2],line[8][1:],line[0][10:12],line[0][8:10],line[0][6:8],line[0][4:6],line[0][0:4],line[7][2:]))
+                        except:
+                            logging.debug("Line error")
+                            continue
                         value = "%s (%s)" % (line[2],line[8][1:])
                         publish.single("hytera/%s/usrTs%s" % (data[2], int(line[6])) , value, hostname=mqtt_host)
                         publish.single("hytera/%s/tlkTs%s" % (data[2], int(line[6])) , line[7][2:], hostname=mqtt_host)
