@@ -1,9 +1,9 @@
 import ConfigParser
 import paho.mqtt.publish as publish
-import ConfigParser
 import logging
 import time
 import sys
+import os
 from pysnmp.carrier.asynsock.dispatch import AsynsockDispatcher
 from pysnmp.carrier.asynsock.dgram import udp
 from pyasn1.codec.ber import decoder
@@ -12,25 +12,18 @@ from struct import unpack
 from daemon import Daemon
 
 config = ConfigParser.RawConfigParser()
-config.read('dmr.conf')
+config.read('%s/dmr.conf' % ( os.path.dirname(os.path.abspath(__file__)) ))
 
-logging.basicConfig(filename=config.get('Logging','file'), level=logging.DEBUG)
+#loggin stuff
+logging.basicConfig(filename=config.get('Logging','file'), level=int(config.get('Trapper','loglevel')))
 logger = logging.getLogger("Trapper")
-ch = logging.StreamHandler()
-ch.setLevel(config.get('Trapper','loglevel'))
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-ch.setFormatter(formatter)
-logger.addHandler(ch)
 
+#catch exceptions and write them to the logfile
 def my_excepthook(excType, excValue, traceback, logger=logger):
     logger.error("Logging an uncaught exception",
                  exc_info=(excType, excValue, traceback))
 
 sys.excepthook = my_excepthook
-
-
-config = ConfigParser.RawConfigParser()
-config.read('dmr.conf')
 
 mqtt_host = config.get("MQTT","host")
 
@@ -160,6 +153,7 @@ def cbFun(transportDispatcher, transportDomain, transportAddress, wholeMsg):
             else:
                 print ent
     return wholeMsg
+
 class Trapper(Daemon):
     def run(self):
         transportDispatcher = AsynsockDispatcher()

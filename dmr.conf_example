@@ -1,15 +1,22 @@
 [Logging]
-file=dmr.log
+file=/var/log/dmr.log
 
 [Webapi]
 url=http://veronamersfoort.nl/dmr/repeater_db.php
 
+[DB]
+path=/opt/DRTM-Backend/repeater.db
+
 [MQTT]
 host=localhost
 
-[Getter]
+[Users]
 loglevel=10
+sleeptime=5.0
+
+[Getter]
+loglevel=40
 sleeptime=2.0
 
 [Trapper]
-loglevel=10
+loglevel=40

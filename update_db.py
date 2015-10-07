@@ -3,6 +3,7 @@ import json
 import ConfigParser
 import sqlite3
 import sys
+import os
 
 def getPage(url):
     req = urllib2.Request(url)
@@ -10,11 +11,11 @@ def getPage(url):
     return response.read() 
 
 config = ConfigParser.RawConfigParser()
-config.read('dmr.conf')
+config.read('%s/dmr.conf' % ( os.path.dirname(os.path.abspath(__file__)) ))
 
 repeaters = json.loads(getPage(config.get("Webapi","url")))
 
-con = sqlite3.connect('repeater.db')
+con = sqlite3.connect(config.get('DB','path'))
 cur = con.cursor() 
 
 for repeater,data in repeaters.iteritems():

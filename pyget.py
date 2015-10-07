@@ -8,18 +8,16 @@ import sys
 from daemon import Daemon
 import logging
 import time
+import os
 
 config = ConfigParser.RawConfigParser()
-config.read('dmr.conf')
+config.read('%s/dmr.conf' % ( os.path.dirname(os.path.abspath(__file__)) ))
+
 mqtt_host = config.get("MQTT","host")
 
-logging.basicConfig(filename=config.get('Logging','file'), level=logging.DEBUG)
+#Logging
+logging.basicConfig(filename=config.get('Logging','file'), level=int(config.get('Getter','loglevel')))
 logger = logging.getLogger("Getter")
-ch = logging.StreamHandler()
-ch.setLevel(config.get('Getter','loglevel'))
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-ch.setFormatter(formatter)
-logger.addHandler(ch)
 
 def my_excepthook(excType, excValue, traceback, logger=logger):
     logger.error("Logging an uncaught exception",
@@ -61,7 +59,7 @@ def dataparse(client,ent,value):
 class Getter(Daemon):
     def run(self):
         while True:
-            con = sqlite3.connect('repeater.db')
+            con = sqlite3.connect(config.get('DB','path'))
             cur = con.cursor()
             cur.execute("SELECT * FROM repeaters WHERE SNMP=1")
             rows = cur.fetchall()
