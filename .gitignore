@@ -1,0 +1,4 @@
+dmr.conf
+repeater.db
+*.pyc
+*.log

@@ -1,3 +1,6 @@
+[Logging]
+file=dmr.log
+
 [Webapi]
 url=http://veronamersfoort.nl/dmr/repeater_db.php
 
@@ -5,4 +8,8 @@ url=http://veronamersfoort.nl/dmr/repeater_db.php
 host=localhost
 
 [Getter]
-sleeptime=2
+loglevel=10
+sleeptime=2.0
+
+[Trapper]
+loglevel=10

@@ -13,10 +13,10 @@ config = ConfigParser.RawConfigParser()
 config.read('dmr.conf')
 mqtt_host = config.get("MQTT","host")
 
-logging.basicConfig(filename='pyget.log', level=logging.DEBUG)
-logger = logging.getLogger("simple_example")
+logging.basicConfig(filename=config.get('Logging','file'), level=logging.DEBUG)
+logger = logging.getLogger("Getter")
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setLevel(config.get('Getter','loglevel'))
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
@@ -76,9 +76,13 @@ class Getter(Daemon):
                     dataparse(host,oid,value)
                     output = subprocess.Popen("snmpget -t 2 -r 0 -On -v1 -c public %s 1.3.6.1.4.1.40297.1.2.1.2.10.0" % host, shell=True, stdout=subprocess.PIPE).stdout.read().strip()
                     output = output.split(" ")
-                    oid = output[0][1:]
-                    value = output[3]
-                    dataparse(host,oid,value)
+                    try:
+                        oid = output[0][1:]
+                        value = output[3]
+                        dataparse(host,oid,value)
+                    except:
+                        logger.error("Value missing for %s" % (host))
+                        continue
                 else:
                     publish.single("hytera/%s/%s" % (host, "rptVoltageAlarm") , 'Alarm', hostname=mqtt_host)
                     publish.single("hytera/%s/%s" % (host, "rptTemperatureAlarm") , 'Alarm', hostname=mqtt_host)
@@ -89,7 +93,7 @@ class Getter(Daemon):
                     publish.single("hytera/%s/%s" % (host, "rptVswr") , 0, hostname=mqtt_host)
                     publish.single("hytera/%s/%s" % (host, "rptTxFwdPower") , 0, hostname=mqtt_host)
                     publish.single("hytera/%s/%s" % (host, "rptTxRefPower") , 0, hostname=mqtt_host)
-            time.sleep(config.get("Getter","sleeptime"))
+            time.sleep(float(config.get("Getter","sleeptime")))
 
 
 if __name__ == "__main__":
