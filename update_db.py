@@ -4,6 +4,7 @@ import ConfigParser
 import sqlite3
 import sys
 import os
+import logging
 
 def getPage(url):
     req = urllib2.Request(url)
@@ -13,14 +14,25 @@ def getPage(url):
 config = ConfigParser.RawConfigParser()
 config.read('%s/dmr.conf' % ( os.path.dirname(os.path.abspath(__file__)) ))
 
+#loggin stuff
+logging.basicConfig(filename=config.get('Logging','file'), level=int(config.get('UpdateDB','loglevel')))
+logger = logging.getLogger("UpdateDB")
+
+#catch exceptions and write them to the logfile
+def my_excepthook(excType, excValue, traceback, logger=logger):
+    logger.error("Logging an uncaught exception",
+                 exc_info=(excType, excValue, traceback))
+
+sys.excepthook = my_excepthook
+
+
 repeaters = json.loads(getPage(config.get("Webapi","url")))
 
 con = sqlite3.connect(config.get('DB','path'))
 cur = con.cursor() 
 
 for repeater,data in repeaters.iteritems():
-    print repeater
-    print data['ip']
+    logger.debug("%s %s" % ( repeater,data['ip'] ))
     if data['rssi'] == 0:
         snmp = 0
     else:
@@ -37,5 +49,5 @@ except sqlite3.Error, e:
     if con:
         con.rollback()
         
-    print "Error %s:" % e.args[0]
+    logger.error("Error %s:" % e.args[0])
     sys.exit(1)

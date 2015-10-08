@@ -4,6 +4,9 @@ file=/var/log/dmr.log
 [Webapi]
 url=http://veronamersfoort.nl/dmr/repeater_db.php
 
+[UpdateDB]
+loglevel=10
+
 [DB]
 path=/opt/DRTM-Backend/repeater.db
 
@@ -11,7 +14,7 @@ path=/opt/DRTM-Backend/repeater.db
 host=localhost
 
 [Users]
-loglevel=10
+loglevel=40
 sleeptime=5.0
 
 [Getter]
