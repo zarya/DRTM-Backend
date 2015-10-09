@@ -73,6 +73,7 @@ class UGetter(Daemon):
                     data = cur.fetchone()
                 except:
                     logger.error("Unable to open DB")
+                    continue
 
                 if isinstance(data, (list, tuple)):
                     if re.match('[a-zA-Z0-9_]',line[2]):
