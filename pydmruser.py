@@ -67,9 +67,12 @@ class UGetter(Daemon):
             lines = parse(getPage(),fieldwidths)
             for line in lines:
                 #bla query
-                cur = con.cursor()    
-                cur.execute("""SELECT * FROM repeaters WHERE Call = "%s"; """ % (line[3].lower()))
-                data = cur.fetchone()
+                try:
+                    cur = con.cursor()
+                    cur.execute("""SELECT * FROM repeaters WHERE Call = "%s"; """ % (line[3].lower()))
+                    data = cur.fetchone()
+                except:
+                    logger.error("Unable to open DB")
 
                 if isinstance(data, (list, tuple)):
                     if re.match('[a-zA-Z0-9_]',line[2]):

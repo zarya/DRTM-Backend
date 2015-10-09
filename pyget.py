@@ -59,10 +59,14 @@ def dataparse(client,ent,value):
 class Getter(Daemon):
     def run(self):
         while True:
-            con = sqlite3.connect(config.get('DB','path'))
-            cur = con.cursor()
-            cur.execute("SELECT * FROM repeaters WHERE SNMP=1")
-            rows = cur.fetchall()
+            try:
+                con = sqlite3.connect(config.get('DB','path'))
+                cur = con.cursor()
+                cur.execute("SELECT * FROM repeaters WHERE SNMP=1")
+                rows = cur.fetchall()
+            except:
+                logger.error("DB error")
+                time.sleep(float(config.get("Getter","sleeptime")))
 
             for row in rows:
                 host = row[2]
