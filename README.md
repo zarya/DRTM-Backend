@@ -10,7 +10,7 @@ DMR RealTime Monitor backend
 # Install
 This guide expects you are running Debian 8 or one of the last versions of Ubuntu
 ```
-pip install paho.mqtt
+pip install paho-mqtt
 pip install pysnmp
 apt-get install snmp python-sqlite
 cp dmr.conf_example dmr.conf
