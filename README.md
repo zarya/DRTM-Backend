@@ -8,6 +8,7 @@ DMR RealTime Monitor backend
 * update_db.py: Script for polling repeater data from the webinterface
 
 # Install
+This guide expects you are running Debian 8 or one of the last versions of Ubuntu
 ```
 pip install paho.mqtt
 pip install pysnmp
