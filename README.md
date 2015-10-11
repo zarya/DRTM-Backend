@@ -18,5 +18,6 @@ python create_db.py
 ```
 * Edit the dmr.conf
 * Now you should be able to start the daemons
+* Create a cronjob to run update_db.py every 15m to update the repeaters from the webinterface.
 
 NOTE: This is still incomplete!!!
