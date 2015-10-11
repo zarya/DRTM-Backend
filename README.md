@@ -7,4 +7,15 @@ DMR RealTime Monitor backend
 * pydmruser.py: Daemon for polling the user and talkgroup data from the master in Germany
 * update_db.py: Script for polling repeater data from the webinterface
 
+# Install
+```
+pip install paho.mqtt
+pip install pysnmp
+apt-get install snmp python-sqlite
+cp dmr.conf_example dmr.conf
+python create_db.py
+```
+* Edit the dmr.conf
+* Now you should be able to start the daemons
+
 NOTE: This is still incomplete!!!
