@@ -39,9 +39,9 @@ for repeater,data in repeaters.iteritems():
         snmp = 1
  
     cur.executescript("""
-        INSERT OR REPLACE INTO repeaters (Call, IP, SNMP) 
-        VALUES ('%s', '%s', %s);
-    """ % (repeater,data['ip'],snmp))
+        INSERT OR REPLACE INTO repeaters (Call, IP, SNMP, RID) 
+        VALUES ('%s', '%s', %s, %s);
+    """ % (repeater,data['ip'],snmp,data['id']))
 try:
     con.commit()
 except sqlite3.Error, e:

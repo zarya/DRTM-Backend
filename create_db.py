@@ -6,7 +6,7 @@ try:
     cur = con.cursor()    
     cur.executescript("""
 DROP TABLE IF EXISTS repeaters; 
-CREATE TABLE repeaters(Id INTEGER PRIMARY KEY, Call TEXT UNIQUE, IP TEXT, SNMP INTEGER);
+CREATE TABLE repeaters(Id INTEGER PRIMARY KEY, Call TEXT UNIQUE, IP TEXT, SNMP INTEGER, RID INTEGER);
     """)
     con.commit()       
 except sqlite3.Error, e:
